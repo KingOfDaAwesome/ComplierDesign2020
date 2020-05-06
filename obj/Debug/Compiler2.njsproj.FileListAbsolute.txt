@@ -1,0 +1,4 @@
+C:\Users\Admin\source\repos\Compiler2\obj\Debug\Compiler2.njsprojAssemblyReference.cache
+C:\Users\Admin\source\repos\Compiler2\bin\Microsoft.NodejsTools.WebRole.dll
+C:\Users\Admin\source\repos\ComplierDesign2020\obj\Debug\Compiler2.njsprojAssemblyReference.cache
+C:\Users\Admin\source\repos\ComplierDesign2020\bin\Microsoft.NodejsTools.WebRole.dll
