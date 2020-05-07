@@ -30,12 +30,18 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="app.ts" />
+    <Content Include="basictests.txt" />
     <Content Include="package.json" />
     <Content Include="README.md" />
     <Content Include="tests.txt" />
     <Content Include="tsconfig.json" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="shuntingyard.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="testharness %282%29.ts" />
+    <TypeScriptCompile Include="testharness %28sy%29.ts" />
     <TypeScriptCompile Include="testharness.ts" />
     <TypeScriptCompile Include="Token.ts">
       <SubType>Code</SubType>

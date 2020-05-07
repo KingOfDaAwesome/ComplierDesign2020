@@ -16,8 +16,14 @@ class Tokenizer {
     }
     next() {
         if (this.input.length == 1) {
+            //console.log("input")
+            //console.log(this.input)
+            this.tokens.set(this.tokens.size + 1, new Token_1.Token("$", undefined, this.lineNumber));
+            this.input = '';
             return new Token_1.Token("$", undefined, this.lineNumber);
         }
+        //console.log("input")
+        //console.log(this.input)
         for (let i = 0; i < this.gram.term.length; ++i) {
             //console.log("x");
             //console.log(this.input.substring(this.idx, this.input.length));
@@ -52,13 +58,16 @@ class Tokenizer {
                 if (sym !== "WHITESPACE" && sym !== "COMMENT" && sym !== "NEWLINE") {
                     //console.log(new Token(sym, lex, this.lineNumber))
                     this.idx += 1;
-                    this.tokens.set(this.idx, new Token_1.Token(sym, lex, this.lineNumber));
+                    //this.tokens.set(this.idx, new Token(sym, lex, this.lineNumber));
                     let tok = new Token_1.Token(sym, lex, this.lineNumber);
                     let regz = new RegExp("\n");
                     let nl = regz.exec(q[0]);
                     if (nl) {
                         this.lineNumber += 1;
                     }
+                    //console.log(tok)
+                    //console.log(this.tokens)
+                    this.tokens.set(this.tokens.size + 1, tok);
                     return tok;
                 }
                 else {
@@ -72,6 +81,11 @@ class Tokenizer {
                 }
             }
         }
+    }
+    walk() {
+        while (this.next() != null)
+            //console.log("walk")
+            this.next();
     }
 }
 exports.Tokenizer = Tokenizer;

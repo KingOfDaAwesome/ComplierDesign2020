@@ -1,0 +1,12 @@
+digraph d{
+node [fontname="Helvetica",shape=box];
+n0 [label=<MULOP>];
+n1 [label=<ADDOP>];
+n2 [label=<NUM>];
+n3 [label=<NUM>];
+n4 [label=<NUM>];
+n0 -> n1;
+n0 -> n4;
+n1 -> n2;
+n1 -> n3;
+}

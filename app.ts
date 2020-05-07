@@ -1,82 +1,55 @@
-"use strict";
-
-//This test harness doesn't output many diagnostics when things break.
-//If you want to, you can instrument it accordingly to help you debug.
 
 declare var require: any;
-
-import { Grammar } from "./Grammar";
-import { Tokenizer } from "./Tokenizer";
 let fs = require("fs");
-
+import { Grammar } from "./Grammar";
 
 function main() {
-    console.log("muffin");
-    let teststr: string = fs.readFileSync("tests.txt", "utf8");
-    let tests = JSON.parse(teststr);
-    let lastSpec: string;
-    let G: Grammar;
-    let T: Tokenizer;
+    let data: string = fs.readFileSync("tests.txt", "utf8");
+    let tests: any = JSON.parse(data);
+    let numPassed = 0;
+    let numFailed = 0;
 
     for (let i = 0; i < tests.length; ++i) {
-        console.log("Test " + i);
-        let spec = tests[i]["tokenSpec"];
-        let inp = tests[i]["input"];
-        let expected = tests[i]["expected"];
-        if (spec !== lastSpec) {
-            G = new Grammar(spec);
-            T = new Tokenizer(G);
-            console.log("Creating tokenizer for " + tests[i]["gname"] + "...");
-            lastSpec = spec;
-        } else {
-            console.log("Reusing tokenizer...");
+
+        let name: string = tests[i]["name"];
+        let expected: any = tests[i]["nullable"];
+        let input: string = tests[i]["input"];
+
+        let G = new Grammar(input);
+        let nullable: any = G.getNullable();
+        if (!setsAreSame(nullable, expected)) {
+            console.log("Test " + name + " failed");
+            ++numFailed;
         }
-
-        console.log("Input " + tests[i]["iname"]);
-        T.setInput(inp);
-
-        let j = 0;
-        while (true) {
-
-            let expectedToken = expected[j++];
-
-            try {
-                let tok = T.next();
-                //console.log("here3")
-                console.log(tok)
-                if (expectedToken === undefined) {
-                    console.log("Did not expect to get token here");
-                    return;
-                }
-
-                if (expectedToken.sym === "$" && tok.sym === "$") {
-                    break;
-                }
-
-                if (tok.sym !== expectedToken.sym || tok.lexeme !== expectedToken.lexeme || tok.line !== expectedToken.line) {
-                    console.log("Mismatch");
-                    console.log("\tGot:", tok);
-                    console.log("\tExpected:", expectedToken);
-                    console.log("\tGrammar:");
-                    console.log("" + spec);
-                    return;
-                }
-
-            } catch (e) {
-
-                if (e) {
-                    if (expectedToken === undefined) {
-                        //failure was expected
-                        break;
-                    } else {
-                        throw (e);
-                    }
-                }
-            }
-
-        }
+        else
+            ++numPassed;
     }
-    console.log(tests.length + " tests OK");
+    console.log(numPassed + " tests OK" + "      " + numFailed + " tests failed");
+    return numFailed == 0;
 }
 
-main()
+function setsAreSame(s1: any, s2: any) {
+    let L1: string[] = [];
+    let L2: string[] = [];
+
+    s1.forEach((x: string) => {
+        L1.push(x);
+    });
+    s2.forEach((x: string) => {
+        L2.push(x);
+    });
+    L1.sort();
+    L2.sort();
+    if (L1.length !== L2.length)
+        return false;
+    for (let i = 0; i < L1.length; ++i) {
+        if (L1[i] !== L2[i])
+            return false;
+    }
+    return true;
+}
+
+
+
+
+main();
