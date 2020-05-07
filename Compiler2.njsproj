@@ -42,6 +42,7 @@
     </TypeScriptCompile>
     <TypeScriptCompile Include="testharness %282%29.ts" />
     <TypeScriptCompile Include="testharness %28sy%29.ts" />
+    <TypeScriptCompile Include="testharness dfa.ts" />
     <TypeScriptCompile Include="testharness first.ts" />
     <TypeScriptCompile Include="testharness.ts" />
     <TypeScriptCompile Include="testharness1r0nfa.ts" />

@@ -84,4 +84,4 @@ function outputDotDFA(dfa, nfa) {
     return L.join("\n");
 }
 main();
-//# sourceMappingURL=app.js.map
+//# sourceMappingURL=testharness dfa.js.map
