@@ -1,23 +1,18 @@
-
-declare var require: any;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 let fs = require("fs");
-import { Grammar } from "./Grammar";
-
+const Grammar_1 = require("./Grammar");
 function main() {
-    let data: string = fs.readFileSync("tests.txt", "utf8");
-    let tests: any = JSON.parse(data);
+    let data = fs.readFileSync("tests.txt", "utf8");
+    let tests = JSON.parse(data);
     let numPassed = 0;
     let numFailed = 0;
-
     for (let i = 0; i < tests.length; ++i) {
-
-        let name: string = tests[i]["name"];
-        let expected: { [key: string]: string[] } = tests[i]["first"];
-        let input: string = tests[i]["input"];
-
-        let G = new Grammar(input);
-
-        let first: Map<string, Set<string>> = G.getFirst();
+        let name = tests[i]["name"];
+        let expected = tests[i]["first"];
+        let input = tests[i]["input"];
+        let G = new Grammar_1.Grammar(input);
+        let first = G.getFirst();
         if (!dictionariesAreSame(expected, first)) {
             console.log("Test " + name + " failed");
             ++numFailed;
@@ -25,17 +20,14 @@ function main() {
         else
             ++numPassed;
     }
-
     console.log(numPassed + " tests OK" + "      " + numFailed + " tests failed");
     return numFailed == 0;
 }
-
-function dictionariesAreSame(s1: { [key: string]: string[] }, s2: Map<string, Set<string>>) {
-    let M1: Map<string, Set<string>> = toMap(s1);
+function dictionariesAreSame(s1, s2) {
+    let M1 = toMap(s1);
     let M2 = s2;
-
-    let k1: string[] = [];
-    let k2: string[] = [];
+    let k1 = [];
+    let k2 = [];
     for (let k of M1.keys())
         k1.push(k);
     for (let k of M2.keys())
@@ -54,28 +46,25 @@ function dictionariesAreSame(s1: { [key: string]: string[] }, s2: Map<string, Se
     }
     return true;
 }
-
-function toMap(s: { [key: string]: string[] }) {
-    let r: Map<string, Set<string>> = new Map();
+function toMap(s) {
+    let r = new Map();
     for (let k in s) {
         r.set(k, new Set());
-        s[k].forEach((x: string) => {
+        s[k].forEach((x) => {
             r.get(k).add(x);
         });
     }
     return r;
 }
-
-function listsEqual(L1a: any, L2a: any) {
-    let L1: string[] = [];
-    let L2: string[] = [];
-    L1a.forEach((x: string) => {
+function listsEqual(L1a, L2a) {
+    let L1 = [];
+    let L2 = [];
+    L1a.forEach((x) => {
         L1.push(x);
     });
-    L2a.forEach((x: string) => {
+    L2a.forEach((x) => {
         L2.push(x);
     });
-
     L1.sort();
     L2.sort();
     if (L1.length !== L2.length)
@@ -86,8 +75,5 @@ function listsEqual(L1a: any, L2a: any) {
     }
     return true;
 }
-
-
-
-
 main();
+//# sourceMappingURL=testharness first.js.map

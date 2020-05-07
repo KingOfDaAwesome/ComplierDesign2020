@@ -1,11 +1,13 @@
 export class Grammar {
     term: Terminal[]
-    nonterm: Map<String, String>
+    nonterm: Map<string, string>
     gramString: string
     productions: Map<String, String>
     rhs:  Array<String>
     lhs: Array<String>
     Nullable: Set<String>
+    First: Map<string,Set<string>>
+    Follow: Map<string,Set<string>>
 
     constructor(s) {
         //console.log("a")
@@ -19,6 +21,8 @@ export class Grammar {
         //console.log("pllt2");
         this.findGrammar();
         this.Nullable = new Set();
+        this.First = new Map();
+        this.Follow = new Map();
         //console.log("pllt");
     }
 
@@ -148,29 +152,29 @@ export class Grammar {
                 }
             }
             for (let lhs of this.nonterm) {
-                console.log("lhs")
-                console.log(lhs.toString())
+                //console.log("lhs")
+                //console.log(lhs.toString())
                 let rhs = lhs.toString().split(",")[1]
-                console.log("rhs")
-                console.log(rhs)
+                //console.log("rhs")
+                //console.log(rhs)
                 let prod = rhs.split("|")
-                console.log("prod")
-                console.log(prod)
+                //console.log("prod")
+                //console.log(prod)
                 for (let p of prod) {
-                    console.log("p")
-                    console.log(p)
-                    console.log(p.split(" "))
+                    //console.log("p")
+                    //console.log(p)
+                    //console.log(p.split(" "))
                     let n = true;
                     for (let M of p.split(" ")) {
-                        console.log("M")
-                        console.log(M)
+                        //console.log("M")
+                        //console.log(M)
                         
                         if (M != "")
                             if (this.Nullable.has(M.replace(" ", ""))) {
-                                console.log("herehere")
+                                //console.log("herehere")
                             }
                             else {
-                                console.log("nope")
+                                //console.log("nope")
                                 n = false
                             }
                     }
@@ -180,15 +184,135 @@ export class Grammar {
             }
             if (x == this.Nullable.size)
                 cha = false
-            console.log("nullable")
-            console.log(this.Nullable)
-            console.log("\n\n\n\n\n")
+            //console.log("nullable")
+            //console.log(this.Nullable)
+            //console.log("\n\n\n\n\n")
             
         }
-        console.log("nullable")
-        console.log(this.Nullable)
-        console.log("\n\n\n\n\n")
+        //console.log("nullable")
+        //console.log(this.Nullable)
+        //console.log("\n\n\n\n\n")
         return this.Nullable;
+    }
+    getFirst() {
+        this.getNullable()
+        for (let lhs of this.term) {
+                if (lhs.sym != "NEWLINE" && lhs.sym != "WHITESPACE") { 
+                //console.log(lhs.sym)
+                let tmp = new Set<string>();
+                tmp.add(lhs.sym)
+                this.First.set(lhs.sym, tmp)
+            }
+        }
+        for (let lhs of this.nonterm) {
+            if (lhs[0]!= "NEWLINE" && lhs[0] != "WHITESPACE") {
+                //console.log(lhs[0])
+                let tmp = new Set<string>();
+                this.First.set(lhs[0], tmp)
+            }
+        }
+        //console.log("First Inital")
+        //console.log(this.First)
+
+        let stable = false;
+ /*       while (!stable) {
+            stable = true
+            let x = this.Nullable.size
+            for (let lhs of this.nonterm) {
+                //console.log("lhs")
+                //console.log(lhs.toString())
+                let l = lhs.toString().split(",")[0]
+                let rhs = lhs.toString().split(",")[1]
+                //console.log("rhs")
+                //console.log(rhs)
+                let prod = rhs.split("|")
+                //console.log("prod")
+                //console.log(prod)
+                for (let p of prod) {
+                    //console.log("p")
+                    //console.log(p)
+                    let M = p.split(" ")
+                    let done = false
+                    for (let i = 0; i < M.length; i++) {
+                        //console.log("M")
+                        //console.log(M[i])
+                        //console.log(this.First.get(M[i]))
+                        
+                        if (this.First.get(M[i]) != null)
+                            for (let x of this.First.get(M[i])) {
+                                if (done == false) { 
+                                    //console.log("x**")
+                                    //console.log(x)
+                                    let q = this.First.get(l)
+                                    let che = q.size
+                                    //console.log("q**")
+                                    //console.log(l)
+                                    //console.log(q)
+                                    q.add(x);
+                                    if (q.size > che) {
+                                        stable = false
+                                    }
+                                    //console.log(q)
+                                }
+                                if (!this.Nullable.has(x)) {
+                                    console.log(this.Nullable)
+                                    console.log(x)
+                                    console.log("yepppppppppppppppppppppppppppppppppppppppppppppppppppppp")
+                                    console.log(l)
+                                    console.log(rhs)
+                                    console.log(p)
+                                    console.log(M)
+                                    done = true
+                                    break
+                                }
+                            }
+                    }
+                }
+            }
+        }*/
+        while (!stable) {
+            stable = true
+            let x = this.Nullable.size
+            for (let x of this.nonterm) {
+                let lhs = x.toString().split(",")[0]
+                console.log("lhs")
+                console.log(lhs)
+                let rhs = x.toString().split(",")[1]
+                //console.log("rhs")
+                //console.log(rhs)
+                let prod = rhs.split("|")
+                //console.log("prod")
+                //console.log(prod)
+                for (let p of prod) {
+                    //console.log("p")
+                    //console.log(p)
+                    let M = p.trim().split(" ");
+                    for (let L of M) {
+                        if (L != "") {
+                            L.replace(" ", "")
+                        }
+                    }
+                    for (let L of M) {
+                        console.log(L)
+                        if (this.First.get(L) != null) { 
+                            let che = this.First.get(lhs).size
+                            for (let x of this.First.get(L)) {
+                                this.First.get(lhs).add(x);
+                            }
+                            if (che < this.First.get(lhs).size)
+                                stable = false
+                        }
+
+                        if (!this.Nullable.has(L))
+                            break
+                    }
+                    console.log(M)
+                }
+            }
+        }
+        console.log(this.First)
+
+        return this.First
     }
 }
 export class Terminal {
