@@ -9,10 +9,10 @@ function main() {
     let numFailed = 0;
     for (let i = 0; i < tests.length; ++i) {
         let name = tests[i]["name"];
-        let expected = tests[i]["first"];
+        let expected = tests[i]["follow"];
         let input = tests[i]["input"];
         let G = new Grammar_1.Grammar(input);
-        let first = G.getFirst();
+        let first = G.getFollow();
         if (!dictionariesAreSame(expected, first)) {
             console.log("Test " + name + " failed");
             ++numFailed;
@@ -26,6 +26,9 @@ function main() {
 function dictionariesAreSame(s1, s2) {
     let M1 = toMap(s1);
     let M2 = s2;
+    console.log("\n\n\n\n\n\n\n\n");
+    console.log(M1);
+    console.log(M2);
     let k1 = [];
     let k2 = [];
     for (let k of M1.keys())

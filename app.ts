@@ -12,12 +12,12 @@ function main() {
     for (let i = 0; i < tests.length; ++i) {
 
         let name: string = tests[i]["name"];
-        let expected: { [key: string]: string[] } = tests[i]["first"];
+        let expected: { [key: string]: string[] } = tests[i]["follow"];
         let input: string = tests[i]["input"];
 
         let G = new Grammar(input);
 
-        let first: Map<string, Set<string>> = G.getFirst();
+        let first: Map<string, Set<string>> = G.getFollow();
         if (!dictionariesAreSame(expected, first)) {
             console.log("Test " + name + " failed");
             ++numFailed;
@@ -25,7 +25,6 @@ function main() {
         else
             ++numPassed;
     }
-
     console.log(numPassed + " tests OK" + "      " + numFailed + " tests failed");
     return numFailed == 0;
 }
@@ -33,7 +32,9 @@ function main() {
 function dictionariesAreSame(s1: { [key: string]: string[] }, s2: Map<string, Set<string>>) {
     let M1: Map<string, Set<string>> = toMap(s1);
     let M2 = s2;
-
+    console.log("\n\n\n\n\n\n\n\n")
+    console.log(M1)
+    console.log(M2)
     let k1: string[] = [];
     let k2: string[] = [];
     for (let k of M1.keys())

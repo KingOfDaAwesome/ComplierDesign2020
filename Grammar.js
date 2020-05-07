@@ -198,68 +198,13 @@ class Grammar {
         //console.log("First Inital")
         //console.log(this.First)
         let stable = false;
-        /*       while (!stable) {
-                   stable = true
-                   let x = this.Nullable.size
-                   for (let lhs of this.nonterm) {
-                       //console.log("lhs")
-                       //console.log(lhs.toString())
-                       let l = lhs.toString().split(",")[0]
-                       let rhs = lhs.toString().split(",")[1]
-                       //console.log("rhs")
-                       //console.log(rhs)
-                       let prod = rhs.split("|")
-                       //console.log("prod")
-                       //console.log(prod)
-                       for (let p of prod) {
-                           //console.log("p")
-                           //console.log(p)
-                           let M = p.split(" ")
-                           let done = false
-                           for (let i = 0; i < M.length; i++) {
-                               //console.log("M")
-                               //console.log(M[i])
-                               //console.log(this.First.get(M[i]))
-                               
-                               if (this.First.get(M[i]) != null)
-                                   for (let x of this.First.get(M[i])) {
-                                       if (done == false) {
-                                           //console.log("x**")
-                                           //console.log(x)
-                                           let q = this.First.get(l)
-                                           let che = q.size
-                                           //console.log("q**")
-                                           //console.log(l)
-                                           //console.log(q)
-                                           q.add(x);
-                                           if (q.size > che) {
-                                               stable = false
-                                           }
-                                           //console.log(q)
-                                       }
-                                       if (!this.Nullable.has(x)) {
-                                           console.log(this.Nullable)
-                                           console.log(x)
-                                           console.log("yepppppppppppppppppppppppppppppppppppppppppppppppppppppp")
-                                           console.log(l)
-                                           console.log(rhs)
-                                           console.log(p)
-                                           console.log(M)
-                                           done = true
-                                           break
-                                       }
-                                   }
-                           }
-                       }
-                   }
-               }*/
         while (!stable) {
             stable = true;
             let x = this.Nullable.size;
             for (let x of this.nonterm) {
                 let lhs = x.toString().split(",")[0];
-                console.log("lhs");
-                console.log(lhs);
+                //console.log("lhs")
+                //console.log(lhs)
                 let rhs = x.toString().split(",")[1];
                 //console.log("rhs")
                 //console.log(rhs)
@@ -276,7 +221,7 @@ class Grammar {
                         }
                     }
                     for (let L of M) {
-                        console.log(L);
+                        //console.log(L)
                         if (this.First.get(L) != null) {
                             let che = this.First.get(lhs).size;
                             for (let x of this.First.get(L)) {
@@ -288,12 +233,108 @@ class Grammar {
                         if (!this.Nullable.has(L))
                             break;
                     }
-                    console.log(M);
+                    //console.log(M)
                 }
             }
         }
-        console.log(this.First);
+        //console.log(this.First)
         return this.First;
+    }
+    getFollow() {
+        this.getNullable();
+        this.getFirst();
+        let first = true;
+        for (let lhs of this.nonterm) {
+            if (first) {
+                let tmp = new Set();
+                tmp.add("$");
+                //console.log(tmp)
+                first = false;
+                this.Follow.set(lhs[0], tmp);
+            }
+            else {
+                let tmp = new Set();
+                this.Follow.set(lhs[0], tmp);
+            }
+        }
+        //console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+        //console.log(this.Follow)
+        let stable = false;
+        while (!stable) {
+            stable = true;
+            let x = this.Nullable.size;
+            for (let x of this.nonterm) {
+                let lhs = x.toString().split(",")[0];
+                //console.log("lhs")
+                //console.log(lhs)
+                let rhs = x.toString().split(",")[1];
+                //console.log("rhs")
+                //console.log(rhs)
+                let prod = rhs.split("|");
+                //console.log("prod")
+                //console.log(prod)
+                for (let p of prod) {
+                    //console.log("p")
+                    //console.log(p)
+                    let M = p.trim().split(" ");
+                    for (let L of M) {
+                        if (L != "") {
+                            L.replace(" ", "");
+                        }
+                    }
+                    //console.log(M)
+                    for (let x = 0; x < M.length; x++) {
+                        if (this.nonterm.has(M[x])) {
+                            let che = this.Follow.get(M[x]).size;
+                            console.log(M[x]);
+                            if (x < M.length - 1) {
+                                let checkdepth = 1;
+                                //console.log("M[x+1]")
+                                //console.log(M[x + 1])
+                                let up = false;
+                                while (this.Nullable.has(M[x + checkdepth])) {
+                                    for (let g of this.First.get(M[x + checkdepth])) {
+                                        this.Follow.get(M[x]).add(g);
+                                    }
+                                    if (x + checkdepth < M.length - 1) {
+                                        console.log("@@@@@@@@@@@@");
+                                        checkdepth += 1;
+                                    }
+                                    else {
+                                        checkdepth += 1;
+                                        up = true;
+                                    }
+                                }
+                                if (!up) {
+                                    console.log("AAAAAAAAAAAAAAAAAAA");
+                                    for (let g of this.First.get(M[x + checkdepth])) {
+                                        this.Follow.get(M[x]).add(g);
+                                    }
+                                }
+                                if (up) {
+                                    console.log("BBBBBBBBBBBBBBBBBBB");
+                                    for (let g of this.Follow.get(lhs)) {
+                                        this.Follow.get(M[x]).add(g);
+                                    }
+                                }
+                            }
+                            else {
+                                console.log("LLLLLLLLLLLLLLLLLLLLLLLLL");
+                                for (let g of this.Follow.get(lhs)) {
+                                    this.Follow.get(M[x]).add(g);
+                                }
+                            }
+                            console.log(this.Follow.get(M[x]));
+                            if (che < this.Follow.get(M[x]).size)
+                                stable = false;
+                        }
+                    }
+                }
+            }
+            //console.log(this.Follow)
+        }
+        //console.log(this.Follow)
+        return this.Follow;
     }
 }
 exports.Grammar = Grammar;
