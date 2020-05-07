@@ -15,11 +15,12 @@ class Grammar {
         this.Nullable = new Set();
         this.First = new Map();
         this.Follow = new Map();
+        this.getFollow();
         //console.log("pllt");
     }
     findGrammar() {
         //console.log("here2")
-        console.log(this.gramString);
+        //console.log(this.gramString);
         let x = this.gramString.split("\n");
         //console.log("x")
         //console.log(x);
@@ -58,8 +59,9 @@ class Grammar {
             }
             else {
                 if (!q) {
-                    //console.log("here7")
-                    this.nonterm.set(a[0], a[1]);
+                    if (this.startSymbol == null)
+                        this.startSymbol = a[0];
+                    this.nonterm.set(a[0], a[1].replace("lambda", ""));
                 }
                 else {
                     //console.log("here9")
@@ -179,7 +181,7 @@ class Grammar {
         return this.Nullable;
     }
     getFirst() {
-        this.getNullable();
+        //this.getNullable()
         for (let lhs of this.term) {
             if (lhs.sym != "NEWLINE" && lhs.sym != "WHITESPACE") {
                 //console.log(lhs.sym)
@@ -286,7 +288,7 @@ class Grammar {
                     for (let x = 0; x < M.length; x++) {
                         if (this.nonterm.has(M[x])) {
                             let che = this.Follow.get(M[x]).size;
-                            console.log(M[x]);
+                            //console.log(M[x])
                             if (x < M.length - 1) {
                                 let checkdepth = 1;
                                 //console.log("M[x+1]")
@@ -297,7 +299,7 @@ class Grammar {
                                         this.Follow.get(M[x]).add(g);
                                     }
                                     if (x + checkdepth < M.length - 1) {
-                                        console.log("@@@@@@@@@@@@");
+                                        //console.log("@@@@@@@@@@@@")
                                         checkdepth += 1;
                                     }
                                     else {
@@ -306,25 +308,25 @@ class Grammar {
                                     }
                                 }
                                 if (!up) {
-                                    console.log("AAAAAAAAAAAAAAAAAAA");
+                                    //console.log("AAAAAAAAAAAAAAAAAAA")
                                     for (let g of this.First.get(M[x + checkdepth])) {
                                         this.Follow.get(M[x]).add(g);
                                     }
                                 }
                                 if (up) {
-                                    console.log("BBBBBBBBBBBBBBBBBBB");
+                                    //console.log("BBBBBBBBBBBBBBBBBBB")
                                     for (let g of this.Follow.get(lhs)) {
                                         this.Follow.get(M[x]).add(g);
                                     }
                                 }
                             }
                             else {
-                                console.log("LLLLLLLLLLLLLLLLLLLLLLLLL");
+                                //console.log("LLLLLLLLLLLLLLLLLLLLLLLLL")
                                 for (let g of this.Follow.get(lhs)) {
                                     this.Follow.get(M[x]).add(g);
                                 }
                             }
-                            console.log(this.Follow.get(M[x]));
+                            //console.log(this.Follow.get(M[x]))
                             if (che < this.Follow.get(M[x]).size)
                                 stable = false;
                         }

@@ -44,6 +44,7 @@
     <TypeScriptCompile Include="testharness %28sy%29.ts" />
     <TypeScriptCompile Include="testharness first.ts" />
     <TypeScriptCompile Include="testharness.ts" />
+    <TypeScriptCompile Include="testharness1r0nfa.ts" />
     <TypeScriptCompile Include="Token.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
@@ -51,6 +52,9 @@
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="Tokenizer.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="LR.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
   </ItemGroup>
